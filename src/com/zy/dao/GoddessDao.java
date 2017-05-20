@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.zy.db.DBUtil;
 import com.zy.model.Goddess;
@@ -20,17 +21,16 @@ public class GoddessDao {
 	public void addGoddess(Goddess g) throws Exception{
 		Connection conn = DBUtil.getConnection();
 		String sql = ""+
-		" insert into imooc_goddess"+
-		" user_name,sex,age,birthday,email,mobile,"+
-		" create_user,create_date,update_user,update_date,isdel"+
-		" values(" +
-		" ?,?,?,?,?,?,?,current_date(),?,current_date(),?)";
+		"insert into imooc_goddess"+
+		"(user_name,sex,age,birthday,email,mobile,"+
+		"create_user,create_date,update_user,update_date,isdel)"+
+		"values(" + " ?,?,?,?,?,?,?,current_date(),?,current_date(),?)";
 		PreparedStatement ptmt = conn.prepareStatement(sql);
 		
 		ptmt.setString(1, g.getUser_name());
 		ptmt.setInt(2, g.getSex());
 		ptmt.setInt(3, g.getAge());
-		ptmt.setDate(4, new Date(g.getBirthday().getTime()));
+		ptmt.setString(4, g.getBirthday());
 		ptmt.setString(5, g.getEmail());
 		ptmt.setString(6, g.getMobile());
 		ptmt.setString(7, g.getCreat_user());
@@ -51,7 +51,7 @@ public class GoddessDao {
 		ptmt.setString(1, g.getUser_name());
 		ptmt.setInt(2, g.getSex());
 		ptmt.setInt(3, g.getAge());
-		ptmt.setDate(4, new Date(g.getBirthday().getTime()));
+		ptmt.setString(4, g.getBirthday());
 		ptmt.setString(5, g.getEmail());
 		ptmt.setString(6, g.getMobile());
 		ptmt.setString(7, g.getUpdate_user());
@@ -74,14 +74,25 @@ public class GoddessDao {
 	public List<Goddess> query() throws Exception{
 		Connection conn = DBUtil.getConnection();
 		Statement stmt = conn.createStatement();
-		ResultSet rs = stmt.executeQuery("select user_name,age from imooc_goddess");
+		ResultSet rs = stmt.executeQuery("select * from imooc_goddess");
 		
 		List<Goddess> gs = new ArrayList<>();
 		Goddess g = null;
 		while (rs.next()) {
 			g = new Goddess();
+			g.setId(rs.getInt("id"));
 			g.setUser_name(rs.getString("user_name"));
 			g.setAge(rs.getInt("age"));
+			g.setSex(rs.getInt("sex"));
+			g.setBirthday(rs.getString("birthday"));
+			g.setEmail(rs.getString("email"));
+			g.setMobile(rs.getString("mobile"));
+			g.setCreat_date(rs.getDate("create_date"));
+			g.setCreat_user(rs.getString("create_user"));
+			g.setUpdate_date(rs.getDate("update_date"));
+			g.setUpdate_user(rs.getString("update_user"));
+			g.setIsdel(rs.getInt("isdel"));
+			
 			gs.add(g);
 		}
 		return gs;
@@ -103,7 +114,7 @@ public class GoddessDao {
 			g.setUser_name(rs.getString("user_name"));
 			g.setAge(rs.getInt("age"));
 			g.setSex(rs.getInt("sex"));
-			g.setBirthday(rs.getDate("birthday"));
+			g.setBirthday(rs.getString("birthday"));
 			g.setEmail(rs.getString("email"));
 			g.setMobile(rs.getString("mobile"));
 			g.setCreat_date(rs.getDate("create_date"));
@@ -113,5 +124,71 @@ public class GoddessDao {
 			g.setIsdel(rs.getInt("isdel"));
 		}
 		return g;
+	}
+	
+	public List<Goddess> query(String name) throws Exception{
+		List<Goddess> gs = new ArrayList<>();
+		
+		Connection conn = DBUtil.getConnection();
+		PreparedStatement ptmt = conn.prepareStatement("select * from imooc_goddess where user_name like ?");
+		ptmt.setString(1, "%"+name+"%");
+		ResultSet rs = ptmt.executeQuery();
+		
+		Goddess g = null;
+		while (rs.next()) {
+			g = new Goddess();
+			g.setId(rs.getInt("id"));
+			g.setUser_name(rs.getString("user_name"));
+			g.setAge(rs.getInt("age"));
+			g.setSex(rs.getInt("sex"));
+			g.setBirthday(rs.getString("birthday"));
+			g.setEmail(rs.getString("email"));
+			g.setMobile(rs.getString("mobile"));
+			g.setCreat_date(rs.getDate("create_date"));
+			g.setCreat_user(rs.getString("create_user"));
+			g.setUpdate_date(rs.getDate("update_date"));
+			g.setUpdate_user(rs.getString("update_user"));
+			g.setIsdel(rs.getInt("isdel"));
+			
+			gs.add(g);
+		}
+		return gs;
+	}
+	
+	public List<Goddess> query(List<Map<String, Object>>params) throws Exception{
+		List<Goddess> gs = new ArrayList<>();
+		
+		Connection conn = DBUtil.getConnection();
+		StringBuilder sb = new StringBuilder();
+		sb.append("select * from imooc_goddess where 1=1");
+		
+		if(params != null && params.size() > 0){
+			for(int i = 0;i < params.size();i++){
+				Map<String, Object> map = params.get(i);
+				sb.append(" and "+map.get("name")+" "+map.get("rela")+map.get("value"));
+			}
+		}
+		PreparedStatement ptmt = conn.prepareStatement(sb.toString());
+		ResultSet rs = ptmt.executeQuery();
+		
+		Goddess g = null;
+		while (rs.next()) {
+			g = new Goddess();
+			g.setId(rs.getInt("id"));
+			g.setUser_name(rs.getString("user_name"));
+			g.setAge(rs.getInt("age"));
+			g.setSex(rs.getInt("sex"));
+			g.setBirthday(rs.getString("birthday"));
+			g.setEmail(rs.getString("email"));
+			g.setMobile(rs.getString("mobile"));
+			g.setCreat_date(rs.getDate("create_date"));
+			g.setCreat_user(rs.getString("create_user"));
+			g.setUpdate_date(rs.getDate("update_date"));
+			g.setUpdate_user(rs.getString("update_user"));
+			g.setIsdel(rs.getInt("isdel"));
+			
+			gs.add(g);
+		}
+		return gs;
 	}
 }

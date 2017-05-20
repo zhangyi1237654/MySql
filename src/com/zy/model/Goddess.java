@@ -11,7 +11,7 @@ public class Goddess {
 	private String user_name;
 	private int sex;
 	private int age;
-	private Date birthday;
+	private String birthday;
 	private String email;
 	private String mobile;
 	private String creat_user;
@@ -52,11 +52,11 @@ public class Goddess {
 		this.age = age;
 	}
 
-	public Date getBirthday() {
+	public String getBirthday() {
 		return birthday;
 	}
 
-	public void setBirthday(Date birthday) {
+	public void setBirthday(String birthday) {
 		this.birthday = birthday;
 	}
 
