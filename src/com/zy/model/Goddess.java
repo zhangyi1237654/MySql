@@ -116,5 +116,13 @@ public class Goddess {
 		this.isdel = isdel;
 	}
 
+	@Override
+	public String toString() {
+		return "Goddess [id=" + id + ", user_name=" + user_name + ", sex=" + sex + ", age=" + age + ", birthday="
+				+ birthday + ", email=" + email + ", mobile=" + mobile + ", creat_user=" + creat_user + ", creat_date="
+				+ creat_date + ", update_date=" + update_date + ", update_user=" + update_user + ", isdel=" + isdel
+				+ "]";
+	}
+
 	
 }
