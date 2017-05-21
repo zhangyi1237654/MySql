@@ -1,8 +1,11 @@
 package com.zy.test;
-
+//测试类
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.zy.action.storeAction;
 import com.zy.model.Store;
@@ -31,7 +34,16 @@ public class testAction {
 		s1.setIsdel(1);
 		
 		sa.add(s1);*/
+		List<Map<String, Object>> params = new ArrayList<>();
 		
+		Map<String, Object> map = new HashMap<>();
+		map.put("name", "store_name");
+		map.put("rela", "=");
+		map.put("value", "'百事可乐 250ml'");
+		params.add(map);
+		
+		List<Store> list = sa.query(params);
+		list.forEach(System.out::println);
 	}
 
 }
